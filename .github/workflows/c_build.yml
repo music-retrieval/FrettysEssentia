@@ -15,14 +15,11 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-
-      - name: Create Artifacts Directory
-        run: mkdir "$(pwd)/artifacts"
       
       - name: Build and Generate Artifacts
         run: |
           docker build -t cpp-builder .
-          docker cp cpp-builder:/artifacts/* /artifacts
+          docker run -v ./artifacts:/artifacts cpp-builder
           
       - name: Publish Artifacts
         uses: actions/upload-artifact@v2

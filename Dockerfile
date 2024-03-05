@@ -21,12 +21,4 @@ RUN mkdir build && \
 # Configure artifacts directory
 RUN mkdir /artifacts
 
-# Grab the resulting shared object files
-RUN cp -r \
-    /app/build/src/* \
-    /usr/local/lib/* \
-    /usr/lib/* \
-    /lib/x86_64-linux-gnu/libpcre.so.3 \
-    /lib/x86_64-linux-gnu/libexpat.so.1 \
-    /lib/x86_64-linux-gnu/libkeyutils.so.1 \
-    /artifacts/
+ENTRYPOINT ldd /app/build/src/libFrettysEssentia.so | awk 'NF == 4 { system("cp " $3 " /artifacts") }'
