@@ -15,6 +15,9 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+
+      - name: Create Artifacts Directory
+        run: mkdir "$(pwd)/artifacts"
       
       - name: Build and Generate Artifacts
         run: |
