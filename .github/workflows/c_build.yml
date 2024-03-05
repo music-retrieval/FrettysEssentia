@@ -22,7 +22,7 @@ jobs:
       - name: Build and Generate Artifacts
         run: |
           docker build -t cpp-builder .
-          docker docker cp cpp-builder:/artifacts /artifacts
+          docker cp cpp-builder:/artifacts/* /artifacts
           
       - name: Publish Artifacts
         uses: actions/upload-artifact@v2
