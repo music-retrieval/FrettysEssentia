@@ -1,0 +1,28 @@
+name: Build and Publish FreddysEssentia
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      
+      - name: Build and Generate Artifacts
+        run: |
+          docker build -t cpp-builder .
+          docker run --rm -v "$(pwd)/artifacts:/artifacts" cpp-builder
+          
+      - name: Publish Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: cpp-artifacts
+          path: ./artifacts
