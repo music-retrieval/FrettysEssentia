@@ -1,12 +1,16 @@
+#include "chordstreamer.h"
 #include <iostream>
 #include <vector>
 #include <essentia/algorithmfactory.h>
 
+using namespace std;
+using namespace chordstreamer;
+
 extern "C" {
 
     // Test fuction for interop
-    void test() {
-        std::cout << "Hello from C++!" << std::endl;
+    vector<string> compute_chords(const char* audioFilename) {
+        return chordstreamer::compute(audioFilename);
     }
 
     // Initiate the essentia library
