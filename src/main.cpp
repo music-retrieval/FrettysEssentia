@@ -8,6 +8,12 @@ using namespace chordstreamer;
 
 extern "C" {
 
+    void const char* test() {
+        cout << "Hello from C++!" << endl;
+
+        return "Hello from C++!";
+    }
+
     // Test fuction for interop
     vector<string> compute_chords(const char* audioFilename) {
         return chordstreamer::compute(audioFilename);
