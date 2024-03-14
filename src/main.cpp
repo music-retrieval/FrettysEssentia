@@ -8,7 +8,7 @@ using namespace chordstreamer;
 
 extern "C" {
 
-    void const char* test() {
+    const char* test() {
         cout << "Hello from C++!" << endl;
 
         return "Hello from C++!";
