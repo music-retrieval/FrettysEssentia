@@ -18,7 +18,7 @@ jobs:
       
       - name: Build and Generate Artifacts
         run: |
-          docker build -t cpp-builder .
+          docker build --platform linux/arm64/v8 -t cpp-builder .
           docker run -v ./artifacts:/artifacts cpp-builder
           
       - name: Publish Artifacts
