@@ -21,4 +21,4 @@ RUN mkdir build && \
 # Configure artifacts directory
 RUN mkdir /artifacts
 
-ENTRYPOINT ldd /app/build/src/libFrettysEssentia.so | awk 'NF == 4 { system("cp " $3 " /artifacts") }'
+ENTRYPOINT ldd /app/build/src/libFrettysEssentia.so | awk 'NF == 4 { system("cp " $3 " /artifacts") }' && cp /app/build/src/libFrettysEssentia.so /artifacts
