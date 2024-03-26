@@ -21,14 +21,14 @@ You are now ready to build and run this project.
 This project uses Docker to build the application, so the build process is simply:
 
      cd FrettysEssentia
-     docker build -t FrettysEssentia .
+     docker build -t frettysessentia .
 
 The container is now ready to be run.
 
 ### Run
 
-Since we have our image, simply run:
+Since we have a built image, simply run:
 
-     docker run FrettysEssentia
+     docker run -p 27015:27015 frettysessentia
 
-The server is now running on port `XXXX` in a local container.
+The server is now running on port `27015` which is mapped to the local system.
