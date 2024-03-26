@@ -1,29 +1,24 @@
-#include "chordstreamer.h"
-#include <iostream>
-#include <essentia/algorithmfactory.h>
-#include <essentia/scheduler/network.h>
-#include <essentia/streaming/algorithms/poolstorage.h>
+#include "audiostreamer.h"
 
-using namespace std;
-using namespace essentia;
-using namespace essentia::streaming;
-using namespace essentia::scheduler;
+namespace audiostreamer {
 
-namespace chordstreamer{
-    std::vector<std::string> compute(const char* audioFilename) {
-
+    AudioStreamer::AudioStreamer() {
         // Initialize Essentia
         essentia::init();
+    }
 
-        // Create a pool to store the results
-        Pool pool;
+    AudioStreamer::~AudioStreamer() {
+        // Cleanup Essentia
+        essentia::shutdown();
+    }
 
-        // Create algorithm factory and load algorithms
+    Network AudioStreamer::createPipeline(const char* audioFile) {
+        // Create an algorithm factory
         AlgorithmFactory& factory = AlgorithmFactory::instance();
 
         // Loads the audio file
         Algorithm* loader = factory.create("MonoLoader",
-                                            "filename", audioFilename);
+                                            "filename", audioFile);
 
         // Cuts the audio into frames
         Algorithm* framecutter = factory.create("FrameCutter",
@@ -92,22 +87,27 @@ namespace chordstreamer{
         chordEstimator->output("strength") >> PC(pool, "chords.strength");
 
         // Run the streaming network
-        Network(loader).run();
+        return Network(loader);
+    }
 
-        // Get the estimated key and scale from the pool
+    audioanalytics::AudioAnalytics AudioStreamer::processAudio(const char* audioFile) {
+        Network network = createPipeline(audioFile);
+        network.run();
+
         string estimatedKey = pool.value<string>("tonal.key_key");
         string estimatedScale = pool.value<string>("tonal.key_scale");
 
-        // Print estimated key and scale
+        vector<string> estimatedChords = pool.value<vector<string>>("chords.value");
+        vector<float> estimatedChordStrengths = pool.value<vector<float>>("chords.strength");
+
         cout << "Estimated key: " << estimatedKey << endl;
         cout << "Estimated scale: " << estimatedScale << endl;
 
-        vector<string> estimatedChords = pool.value<vector<string>>("chords.value");
-
-        // Cleanup Essentia
-        essentia::shutdown();
-
-        // Success
-        return estimatedChords;
+        audioanalytics::AudioAnalyticsBuilder builder;
+        audioanalytics::AudioAnalytics audioAnalytics = builder.withKey(estimatedKey, pool.value<float>("tonal.key_strength"))
+                                                                .withChords(estimatedChords, estimatedChordStrengths)
+                                                                .build();
+        
+        return audioAnalytics;
     }
 }

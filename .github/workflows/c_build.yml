@@ -1,4 +1,4 @@
-name: Build and Publish FreddysEssentia
+name: Build and Publish FrettysEssentia
 
 on:
   push:
@@ -17,12 +17,10 @@ jobs:
         uses: actions/checkout@v2
       
       - name: Build and Generate Artifacts
-        run: |
-          docker build --platform linux/arm64/v8 -t cpp-builder .
-          docker run -v ./artifacts:/artifacts cpp-builder
+        run: docker build -t frettysessentia .
           
-      - name: Publish Artifacts
+      - name: Save Docker image as artifact
         uses: actions/upload-artifact@v2
         with:
-          name: libFrettysEssentia
-          path: ./artifacts
+          name: FrettysEssentia
+          path: .
