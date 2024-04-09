@@ -18,7 +18,7 @@ RUN mkdir build && \
     cmake .. && \
     make
 
-# Configure artifacts directory
-RUN mkdir /artifacts
+EXPOSE 27015
 
-ENTRYPOINT ldd /app/build/src/libFrettysEssentia.so | awk 'NF == 4 { system("cp " $3 " /artifacts") }' && cp /app/build/src/libFrettysEssentia.so /artifacts
+ENTRYPOINT [ "/app/build/src/FrettysEssentia" ]
+            
