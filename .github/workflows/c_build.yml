@@ -9,18 +9,56 @@ on:
       - main
 
 jobs:
-  GenerateArtifacts:
+  Deploy:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-      
-      - name: Build and Generate Artifacts
-        run: docker build -t frettysessentia .
-          
-      - name: Save Docker image as artifact
-        uses: actions/upload-artifact@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
         with:
-          name: FrettysEssentia
-          path: .
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - name: Get Timestamp
+        uses: gerred/actions/current-time@master
+        id: current-time
+
+      - name: Replace time string
+        uses: frabert/replace-string-action@master
+        id: format-time
+        with:
+          pattern: '[:\.]+'
+          string: "${{ steps.current-time.outputs.time }}"
+          replace-with: '-'
+          flags: 'g'
+
+      - name: Build docker image
+        if: github.event_name == 'pull_request'
+        run: docker build . -t fretty/essentia:latest
+    
+      - name: Build and push
+        uses: docker/build-push-action@v2
+        if: github.event_name == 'push'
+        with:
+          context: .
+          file: Dockerfile
+          push: true
+          tags: fretty/essentia:latest
+
+      - name: Deploy to EB
+        uses: einaregilsson/beanstalk-deploy@v21
+        if: github.event_name == 'push'
+        with:
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          application_name: FrettysEssentia
+          environment_name: FrettysEssentia-env
+          version_label: "docker-app-${{ steps.format-time.outputs.replaced }}"
+          region: us-east-1
+          deployment_package: Dockerrun.aws.json
