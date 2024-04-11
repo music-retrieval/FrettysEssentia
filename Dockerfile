@@ -18,7 +18,7 @@ RUN mkdir build && \
     cmake .. && \
     make
 
-EXPOSE 27015
+EXPOSE 80
 
 ENTRYPOINT [ "/app/build/src/FrettysEssentia" ]
             

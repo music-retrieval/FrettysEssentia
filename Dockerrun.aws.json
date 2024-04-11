@@ -1,0 +1,12 @@
+{
+    "AWSEBDockerrunVersion": "1",
+    "Image": {
+        "Name": "fretty/essentia:latest",
+        "Update": "true"
+    },
+    "Ports": [
+        {
+            "ContainerPort": "27015"
+        }
+    ]
+}

@@ -4,7 +4,9 @@ FrettysEssentia is a C++ audio processing application intended to be run on a se
 
 ## Build and Run
 
-### Dependencies
+### Locally
+
+#### Dependencies
 
 Ensure you have the following dependencies installed:
 
@@ -16,7 +18,7 @@ Next, clone this repository:
 
 You are now ready to build and run this project.
 
-### Build
+#### Build
 
 This project uses Docker to build the application, so the build process is simply:
 
@@ -25,10 +27,14 @@ This project uses Docker to build the application, so the build process is simpl
 
 The container is now ready to be run.
 
-### Run
+#### Run
 
 Since we have a built image, simply run:
 
      docker run -p 27015:27015 frettysessentia
 
 The server is now running on port `27015` which is mapped to the local system.
+
+### On AWS Elastic Beanstalk
+
+The GitHub actions workflow in this repository automatically deploys the application to AWS Elastic Beanstalk. The workflow is triggered on every push to the `main` branch.
