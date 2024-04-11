@@ -1,3 +1,6 @@
+# Find needed packages
+find_package(RapidJSON REQUIRED)
+
 # Define the C++ executable
 add_executable(FrettysEssentia server.cpp audiostreamer.cpp audioanalytics.cpp)
 

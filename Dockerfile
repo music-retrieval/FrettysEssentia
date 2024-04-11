@@ -4,6 +4,7 @@ FROM ghcr.io/mtg/essentia:bullseye-v2.1_beta5 as cpp-builder
 RUN apt-get update && \
     apt-get install -y \
     cmake \
+    rapidjson-dev \
     g++
 
 # Set the working directory (app for c++)
