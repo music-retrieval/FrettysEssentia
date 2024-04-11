@@ -4,6 +4,9 @@
 #include <string>
 #include <sstream>
 #include <vector>
+#include <rapidjson/document.h>
+#include <rapidjson/stringbuffer.h>
+#include <rapidjson/writer.h>
 
 namespace audioanalytics {
 
@@ -26,6 +29,8 @@ namespace audioanalytics {
             AudioAnalyticsBuilder();
 
             AudioAnalyticsBuilder& withKey(std::string key, float keyStrength);
+
+            AudioAnalyticsBuilder& withScale(std::string scale);
 
             AudioAnalyticsBuilder& withChords(std::vector<std::string> chords, std::vector<float> chordStrengths);
 

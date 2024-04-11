@@ -105,6 +105,7 @@ namespace audiostreamer {
 
         audioanalytics::AudioAnalyticsBuilder builder;
         audioanalytics::AudioAnalytics audioAnalytics = builder.withKey(estimatedKey, pool.value<float>("tonal.key_strength"))
+                                                                .withScale(estimatedScale)
                                                                 .withChords(estimatedChords, estimatedChordStrengths)
                                                                 .build();
         

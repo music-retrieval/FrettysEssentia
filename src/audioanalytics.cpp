@@ -15,7 +15,35 @@ namespace audioanalytics {
 
     // Prepares audio analytics data for network transmission
     const std::string AudioAnalytics::forNetwork() {
-        return concatenateStrings(chords, ",");
+        rapidjson::StringBuffer buffer;
+        rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+
+        writer.StartObject();
+        writer.Key("key");
+        writer.StartObject();
+        writer.Key("key");
+        writer.String(key.c_str());
+        writer.Key("strength");
+        writer.Double(keyStrength);
+        writer.EndObject();
+        
+        writer.Key("scale");
+        writer.String(scale.c_str());
+
+        writer.Key("chords");
+        writer.StartArray();
+        for (size_t i = 0; i < chords.size(); ++i) {
+            writer.StartObject();
+            writer.Key("chord");
+            writer.String(chords[i].c_str());
+            writer.Key("strength");
+            writer.Double(chordStrengths[i]);
+            writer.EndObject();
+        }
+        writer.EndArray();
+        writer.EndObject();
+
+        return buffer.GetString();
     }
 
     // Builder pattern for audio analytic daa
@@ -26,6 +54,12 @@ namespace audioanalytics {
     AudioAnalyticsBuilder& AudioAnalyticsBuilder::withKey(std::string key, float keyStrength) {
         audioAnalytics.key = key;
         audioAnalytics.keyStrength = keyStrength;
+
+        return *this;
+    }
+
+    AudioAnalyticsBuilder& AudioAnalyticsBuilder::withScale(std::string scale) {
+        audioAnalytics.scale = scale;
 
         return *this;
     }
